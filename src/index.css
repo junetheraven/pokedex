@@ -1,3 +1,22 @@
+.grass { background: #5fbd58; color: #034c37 !important;}
+.poison { background: #a552cc; }
+.fire { background: #f0803c; }
+.water { background: #4a90e2; }
+.electric { background: #e5b800; color: #222 !important; }
+.flying { background: #8fa8dd; color: #2b27ae !important; }
+.bug { background: #92bc2c; color: #3b550e !important; }
+.normal { background: #9a9da1; color: #222 !important; }
+.ground { background: #e0c068; }
+.fairy { background: #ee99ac; color: #8a1f4e !important; }
+.fighting { background: #c03028; }
+.psychic { background: #f85888; }
+.rock { background: #b8a038; }
+.steel { background: #b8b8d0; color: #222 !important; }
+.ice { background: #98d8d8; color: #0c6277 !important; }
+.ghost { background: #705898; }
+.dragon { background: #7038f8; }
+.dark { background: #705848; }
+
 body {
   margin: 0;
   padding: 16px;
@@ -5,5 +24,43 @@ body {
   background: linear-gradient(135deg, #4aa3df, #7fd1ae 60%, #f4e285);
   background-attachment: fixed;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.tipos {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.tipo {
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  text-transform: lowercase;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px;
+}
+
+.card {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card img {
+  width: 100px;
+  height: 100px;
+  image-rendering: pixelated;
 }
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PokemonCard from "./components/PokemonCard";
 
 export default function App() {
   const [pokemons, setPokemons] = useState([]);
@@ -72,17 +73,16 @@ export default function App() {
 
       {tipoSelecionado && <p>Total no tipo {tipoSelecionado}: {total} Pokémon(s)</p>}
 
-      <br /><br />
+      <br />
 
       <label htmlFor="busca">busca por nome ou id</label>
-      <input id="busca" type="text" value={busca} onChange={(e) => setBusca(e.target.value)} style={{ width: '100%', boxSizing: 'border-box' }} />
+      <input id="busca" type="text" value={busca} onChange={(e) => setBusca(e.target.value)} style={{ width: '100%', boxSizing: 'border-box' }} /> <br /><br /><br />
 
-      {listaFiltrada.map((p) => (
-        <div key={p.id}>
-          <img src={p.sprites.front_default} alt="" />
-          <p>#{p.id} {p.name}</p>
-        </div>
-      ))}
+      <div className="grid">
+        {listaFiltrada.map((pokemon) => (
+          <PokemonCard key={pokemon.id} pokemon={pokemon} />
+        ))}
+      </div>
     </div>
   )
 }
