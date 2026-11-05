@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PokemonCard from "./components/PokemonCard";
+import PokemonModal from "./components/PokemonModal";
 
 export default function App() {
   const [pokemons, setPokemons] = useState([]);
@@ -7,6 +8,7 @@ export default function App() {
   const [tipos, setTipos] = useState([]);
   const [tipoSelecionado, setTipoSelecionado] = useState('');
   const [total, setTotal] = useState(0);
+  const [selecionado, setSelecionado] = useState(null)
 
   useEffect(() => {
     fetch('https://pokeapi.co/api/v2/type')
@@ -80,9 +82,11 @@ export default function App() {
 
       <div className="grid">
         {listaFiltrada.map((pokemon) => (
-          <PokemonCard key={pokemon.id} pokemon={pokemon} />
+          <PokemonCard key={pokemon.id} pokemon={pokemon} onClick={setSelecionado}/>
         ))}
       </div>
+
+      <PokemonModal pokemon={selecionado} fechar={() => setSelecionado(null)}/>
     </div>
   )
 }
