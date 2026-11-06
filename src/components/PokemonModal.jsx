@@ -18,8 +18,8 @@ export default function PokemonModal({ pokemon, fechar }) {
 
                 <div className="window-body has-space">
                     <div className="detalhe-topo">
-                        <img src={pokemon.sprites.front_default}alt="" />
-                        <img src={pokemon.sprites.back_default}alt="" />
+                        <img src={pokemon.sprites.front_default} alt="" />
+                        <img src={pokemon.sprites.back_default} alt="" />
                     </div>
 
                     <div className="tipos" style={{ marginTop: '8px' }}>

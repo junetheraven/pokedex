@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PokemonCard from "./components/PokemonCard";
 import PokemonModal from "./components/PokemonModal";
+import FilterWindow from "./components/FilterWindow";
 
 export default function App() {
   const [pokemons, setPokemons] = useState([]);
@@ -9,6 +10,7 @@ export default function App() {
   const [tipoSelecionado, setTipoSelecionado] = useState('');
   const [total, setTotal] = useState(0);
   const [selecionado, setSelecionado] = useState(null)
+  const [offset, setOffset] = useState(0)
 
   useEffect(() => {
     fetch('https://pokeapi.co/api/v2/type')
@@ -18,7 +20,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    let url = 'https://pokeapi.co/api/v2/pokemon?limit=20'
+    let url = `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`
     if (tipoSelecionado) {
       url = `https://pokeapi.co/api/v2/type/${tipoSelecionado}`
     }
@@ -31,9 +33,10 @@ export default function App() {
         if (tipoSelecionado) {
           lista = dados.pokemon.map((p) => p.pokemon)
           setTotal(lista.length)
-          lista = lista.slice(0, 20);
+          lista = lista.slice(offset, offset + 20);
         } else {
           lista = dados.results
+          setTotal(dados.count)
         }
 
         return Promise.all(
@@ -42,19 +45,7 @@ export default function App() {
       })
       .then((detalhes) => setPokemons(detalhes))
       .catch((e) => console.error(e))
-  }, [tipoSelecionado])
-
-  useEffect(() => {
-    fetch('https://pokeapi.co/api/v2/pokemon?limit=20')
-      .then((res) => res.json())
-      .then((dados) =>
-        Promise.all(
-          dados.results.map((item) => fetch(item.url).then((res) => res.json()))
-        )
-      )
-      .then((detalhes) => setPokemons(detalhes))
-      .catch((e) => console.error(e))
-  }, [])
+  }, [tipoSelecionado, offset])
 
   let termo = busca.toLowerCase().trim()
   let listaFiltrada = pokemons.filter((p) => {
@@ -63,30 +54,71 @@ export default function App() {
     return false;
   })
 
+  function limpar() {
+    setBusca('')
+    if (tipoSelecionado) {
+      setBusca('')
+      setOffset(0)
+    }
+  }
+
+  function mudarTipo(tipo) {
+    setTipoSelecionado(tipo)
+    setOffset(0)
+  }
+
+  let mensagem = ''
+  if (listaFiltrada.length === 0) {
+    mensagem = 'Nenhum Pokémon Encontrado.'
+  }
+
+  let ultimaPagina = Math.ceil((total / 20) - 1) * 20
+
+  let inicio = pokemons.length === 0 ? 0 : offset + 1
+  let fim = offset + pokemons.length
+
   return (
-    <div>
+    <div className="container">
 
-      <select value={tipoSelecionado} onChange={(e) => setTipoSelecionado(e.target.value)} name="" id="">
-        <option value="">Todos os tipos</option>
-        {tipos.map((t) => (
-          <option value={t.name} key={t.name} >{t.name}</option>
-        ))}
-      </select>
+      <FilterWindow busca={busca} setBusca={setBusca} tipos={tipos} tipoSelecionado={tipoSelecionado} mudarTipo={mudarTipo} limpar={limpar} total={total} inicio={inicio} fim={fim} />
 
-      {tipoSelecionado && <p>Total no tipo {tipoSelecionado}: {total} Pokémon(s)</p>}
-
-      <br />
-
-      <label htmlFor="busca">busca por nome ou id</label>
-      <input id="busca" type="text" value={busca} onChange={(e) => setBusca(e.target.value)} style={{ width: '100%', boxSizing: 'border-box' }} /> <br /><br /><br />
+      {mensagem && (
+        <div className="window">
+          <div className="window-body" style={{ textAlign: 'center', padding: '16px' }}>
+            <p>{mensagem}</p>
+          </div>
+        </div>
+      )}
 
       <div className="grid">
         {listaFiltrada.map((pokemon) => (
-          <PokemonCard key={pokemon.id} pokemon={pokemon} onClick={setSelecionado}/>
+          <PokemonCard key={pokemon.id} pokemon={pokemon} onClick={setSelecionado} />
         ))}
       </div>
 
-      <PokemonModal pokemon={selecionado} fechar={() => setSelecionado(null)}/>
+      <div className="window">
+        <div className="window-body paginacao">
+          <button disabled={offset === 0} onClick={() => setOffset(0)}>
+            &laquo;&laquo; Primeira
+          </button>
+
+          <button disabled={offset === 0} onClick={() => setOffset(offset - 20)}>
+            &laquo; Anterior
+          </button>
+
+          <span>Página {offset / 20 + 1}</span>
+
+          <button disabled={offset + 20 >= total} onClick={() => setOffset(offset + 20)}>
+            Próximo &raquo;
+          </button>
+
+          <button disabled={offset + 20 >= total} onClick={() => setOffset(ultimaPagina)}>
+            Última &raquo;&raquo;
+          </button>
+        </div>
+      </div>
+
+      <PokemonModal pokemon={selecionado} fechar={() => setSelecionado(null)} />
     </div>
   )
 }
