@@ -9,17 +9,22 @@ export default function App() {
   const [tipos, setTipos] = useState([]);
   const [tipoSelecionado, setTipoSelecionado] = useState('');
   const [total, setTotal] = useState(0);
-  const [selecionado, setSelecionado] = useState(null)
-  const [offset, setOffset] = useState(0)
+  const [selecionado, setSelecionado] = useState(null);
+  const [offset, setOffset] = useState(0);
+  const [erro, setErro] = useState(false);
+  const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
     fetch('https://pokeapi.co/api/v2/type')
       .then((res) => res.json())
       .then((dados) => setTipos(dados.results))
-      .catch((e) => console.error(e))
+      .catch(() => setErro(true))
   }, [])
 
   useEffect(() => {
+    setCarregando(true)
+    setErro(false);
+
     let url = `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`
     if (tipoSelecionado) {
       url = `https://pokeapi.co/api/v2/type/${tipoSelecionado}`
@@ -44,7 +49,11 @@ export default function App() {
         )
       })
       .then((detalhes) => setPokemons(detalhes))
-      .catch((e) => console.error(e))
+      .catch(() => {
+        setPokemons([])
+        setErro(true)
+      })
+      .finally(() => setCarregando(false))
   }, [tipoSelecionado, offset])
 
   let termo = busca.toLowerCase().trim()
@@ -68,8 +77,16 @@ export default function App() {
   }
 
   let mensagem = ''
-  if (listaFiltrada.length === 0) {
+  if (carregando) {
+    mensagem = 'Carregando...'
+  }
+
+  else if (listaFiltrada.length === 0) {
     mensagem = 'Nenhum Pokémon Encontrado.'
+  }
+  
+  else if (erro) {
+    mensagem = 'Não foi possível carregar os dados. Verifique sua conexão e recarregue a página.'
   }
 
   let ultimaPagina = Math.ceil((total / 20) - 1) * 20
@@ -80,7 +97,7 @@ export default function App() {
   return (
     <div className="container">
 
-      <FilterWindow busca={busca} setBusca={setBusca} tipos={tipos} tipoSelecionado={tipoSelecionado} mudarTipo={mudarTipo} limpar={limpar} total={total} inicio={inicio} fim={fim} />
+      <FilterWindow busca={busca} setBusca={setBusca} tipos={tipos} tipoSelecionado={tipoSelecionado} mudarTipo={mudarTipo} limpar={limpar} total={carregando ? '...' : total} inicio={inicio} fim={fim} />
 
       {mensagem && (
         <div className="window">
@@ -98,22 +115,22 @@ export default function App() {
 
       <div className="window">
         <div className="window-body paginacao">
-          <button disabled={offset === 0} onClick={() => setOffset(0)}>
-            &laquo;&laquo; Primeira
+          <button disabled={carregando || offset === 0} onClick={() => setOffset(0)}>
+            &laquo;&laquo; Início
           </button>
 
-          <button disabled={offset === 0} onClick={() => setOffset(offset - 20)}>
+          <button disabled={carregando || offset === 0} onClick={() => setOffset(offset - 20)}>
             &laquo; Anterior
           </button>
 
           <span>Página {offset / 20 + 1}</span>
 
-          <button disabled={offset + 20 >= total} onClick={() => setOffset(offset + 20)}>
+          <button disabled={carregando || offset + 20 >= total} onClick={() => setOffset(offset + 20)}>
             Próximo &raquo;
           </button>
 
-          <button disabled={offset + 20 >= total} onClick={() => setOffset(ultimaPagina)}>
-            Última &raquo;&raquo;
+          <button disabled={carregando || offset + 20 >= total} onClick={() => setOffset(ultimaPagina)}>
+            Fim &raquo;&raquo;
           </button>
         </div>
       </div>
