@@ -103,6 +103,7 @@ export default function App() {
         <div className="window">
           <div className="window-body" style={{ textAlign: 'center', padding: '16px' }}>
             <p>{mensagem}</p>
+            {carregando && <div role="progressbar" className="marquee" style={{ maxWidth: '300px', margin: '8px auto 0' }}></div>}
           </div>
         </div>
       )}
