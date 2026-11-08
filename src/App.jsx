@@ -81,12 +81,12 @@ export default function App() {
     mensagem = 'Carregando...'
   }
 
-  else if (listaFiltrada.length === 0) {
-    mensagem = 'Nenhum Pokémon Encontrado.'
-  }
-  
   else if (erro) {
     mensagem = 'Não foi possível carregar os dados. Verifique sua conexão e recarregue a página.'
+  }
+
+  else if (listaFiltrada.length === 0) {
+    mensagem = 'Nenhum Pokémon Encontrado.'
   }
 
   let ultimaPagina = Math.ceil((total / 20) - 1) * 20
@@ -107,11 +107,13 @@ export default function App() {
         </div>
       )}
 
-      <div className="grid">
-        {listaFiltrada.map((pokemon) => (
-          <PokemonCard key={pokemon.id} pokemon={pokemon} onClick={setSelecionado} />
-        ))}
-      </div>
+      {!carregando && (
+        <div className="grid">
+          {listaFiltrada.map((pokemon) => (
+            <PokemonCard key={pokemon.id} pokemon={pokemon} onClick={setSelecionado} />
+          ))}
+        </div>
+      )}
 
       <div className="window">
         <div className="window-body paginacao">

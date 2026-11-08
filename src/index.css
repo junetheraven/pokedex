@@ -11,7 +11,7 @@
 .fighting { background: #c03028; }
 .psychic { background: #f85888; }
 .rock { background: #b8a038; }
-.steel { background: #b8b8d0; }
+.steel { background: #b8b8d0; color: #222 !important; }
 .ice { background: #98d8d8; }
 .ghost { background: #705898; }
 .dragon { background: #7038f8; }
@@ -22,8 +22,15 @@ body {
   padding: 16px;
   min-height: 100vh;
   background: linear-gradient(135deg, #4aa3df, #7fd1ae 60%, #f4e285);
-  background-attachment: fixed;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, #4aa3df, #7fd1ae 60%, #f4e285);
 }
 
 .tipos {
@@ -92,10 +99,6 @@ body {
   padding: 2px 4px;
   border-radius: 4px;
   transition: background 0.15s ease;
-}
-
-.modal .stat:hover {
-  background: rgba(0, 120, 215, 0.15);
 }
 
 .modal .stat span:first-child {
@@ -226,3 +229,38 @@ body {
     min-height: 34px;
   }
 }
+
+.modal {
+  animation: modal-fundo 0.25s ease-out;
+}
+
+@keyframes modal-fundo {
+  from { opacity: 0; }
+}
+
+.modal .window {
+  animation: modal-entrada 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modal-entrada {
+  from { opacity: 0; transform: translateY(40px) scale(0.85); }
+}
+
+@keyframes sprite-entrada {
+  from { opacity: 0; transform: scale(0.2) rotate(-25deg); }
+}
+
+.modal [role="progressbar"] > div {
+  animation: encher 0.7s ease-out 0.5s backwards;
+}
+
+.modal .stat:nth-of-type(2) [role="progressbar"] > div { animation-delay: 0.58s; }
+.modal .stat:nth-of-type(3) [role="progressbar"] > div { animation-delay: 0.66s; }
+.modal .stat:nth-of-type(4) [role="progressbar"] > div { animation-delay: 0.74s; }
+.modal .stat:nth-of-type(5) [role="progressbar"] > div { animation-delay: 0.82s; }
+.modal .stat:nth-of-type(6) [role="progressbar"] > div { animation-delay: 0.9s; }
+
+@keyframes encher {
+  from { width: 0; }
+}
+

@@ -39,7 +39,7 @@ export default function FilterWindow({ busca, setBusca, tipos, tipoSelecionado, 
                         ? <>
                             Tipo <strong>{tipoSelecionado}</strong>: {total} Pokémon(s).
                         </> : <>
-                            Exibindo de <strong>{inicio}</strong> a <strong>{fim}</strong> de <strong>{total}</strong> Pokémons.
+                            Exibindo {inicio} a {fim} de {total} Pokémons.
                         </>}
                 </p>
             </div>
