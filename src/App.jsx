@@ -13,6 +13,7 @@ export default function App() {
   const [offset, setOffset] = useState(0);
   const [erro, setErro] = useState(false);
   const [carregando, setCarregando] = useState(true);
+  const [retry, setRetry] = useState(0)
 
   useEffect(() => {
     fetch('https://pokeapi.co/api/v2/type')
@@ -54,7 +55,7 @@ export default function App() {
         setErro(true)
       })
       .finally(() => setCarregando(false))
-  }, [tipoSelecionado, offset])
+  }, [tipoSelecionado, offset, retry])
 
   let termo = busca.toLowerCase().trim()
   let listaFiltrada = pokemons.filter((p) => {
@@ -66,7 +67,7 @@ export default function App() {
   function limpar() {
     setBusca('')
     if (tipoSelecionado) {
-      setBusca('')
+      setTipoSelecionado('')
       setOffset(0)
     }
   }
@@ -103,7 +104,16 @@ export default function App() {
         <div className="window">
           <div className="window-body" style={{ textAlign: 'center', padding: '16px' }}>
             <p>{mensagem}</p>
-            {carregando && <div role="progressbar" className="marquee" style={{ maxWidth: '300px', margin: '8px auto 0' }}></div>}
+
+            {carregando && (
+              <div role="progressbar" className="marquee" style={{ maxWidth: '300px', margin: '8px auto 0' }}></div>
+            )}
+
+            {erro && (
+              <button onClick={() => setRetry(retry + 1)}>
+                Tentar novamente
+              </button>
+            )}
           </div>
         </div>
       )}
