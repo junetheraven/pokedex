@@ -5,7 +5,7 @@ export default function PokemonModal({ pokemon, fechar }) {
         <div className="modal">
             <div className="window glass active">
                 <div className="title-bar">
-                    <div className="title-bar-text">
+                    <div className="title-bar-text" style={{textTransform: 'capitalize'}}>
                         #{pokemon.id} — {pokemon.name}
                     </div>
 

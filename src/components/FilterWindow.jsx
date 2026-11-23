@@ -26,7 +26,7 @@ export default function FilterWindow({ busca, setBusca, tipos, tipoSelecionado, 
                             <option value="">Todos</option>
 
                             {tipos.map((t) => (
-                                <option value={t.name} key={t.name} >{t.name}</option>
+                                <option style={{ textTransform: 'capitalize' }} value={t.name} key={t.name} >{t.name}</option>
                             ))}
                         </select>
                     </div>
